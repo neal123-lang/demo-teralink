@@ -50,6 +50,8 @@ export default function Header() {
 
   const servicesRef = useRef<HTMLDivElement>(null);
 
+  const servicesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   /* -------------------------------------------------------
      CLOSE DESKTOP SERVICES DROPDOWN WHEN CLICKING OUTSIDE
   ------------------------------------------------------- */
@@ -67,10 +69,7 @@ export default function Header() {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -89,10 +88,7 @@ export default function Header() {
     document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener(
-        "keydown",
-        handleEscape
-      );
+      document.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
@@ -132,6 +128,40 @@ export default function Header() {
     setServicesOpen(false);
   };
 
+  const openServices = () => {
+    if (servicesCloseTimer.current) {
+      clearTimeout(servicesCloseTimer.current);
+    }
+
+    setServicesOpen(true);
+  };
+
+  const closeServicesWithDelay = () => {
+    if (servicesCloseTimer.current) {
+      clearTimeout(servicesCloseTimer.current);
+    }
+
+    servicesCloseTimer.current = setTimeout(() => {
+      setServicesOpen(false);
+    }, 150);
+  };
+
+  const keepServicesOpen = () => {
+    if (servicesCloseTimer.current) {
+      clearTimeout(servicesCloseTimer.current);
+    }
+
+    setServicesOpen(true);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (servicesCloseTimer.current) {
+        clearTimeout(servicesCloseTimer.current);
+      }
+    };
+  }, []);
+
   /* =======================================================
      RETURN
   ======================================================= */
@@ -143,7 +173,6 @@ export default function Header() {
       ===================================================== */}
 
       <header className="fixed inset-x-0 top-0 z-[100] w-full bg-white shadow-[0_4px_24px_rgba(0,60,60,0.06)]">
-       
         {/* =================================================
             TOP ANNOUNCEMENT BAR
         ================================================= */}
@@ -174,7 +203,7 @@ export default function Header() {
               href="/"
               aria-label="Teralink Technical Solutions homepage"
               onClick={closeMobile}
-              className="relative z-[110] flex h-full w-[120px] shrink-0 items-center sm:w-[150px] lg:w-[180px]"
+              className="relative z-[110] flex h-full w-[146px] shrink-0 items-center sm:w-[150px] lg:w-[180px]"
             >
               <Image
                 src="/logos/logo.svg"
@@ -203,7 +232,6 @@ export default function Header() {
                 className="group relative flex h-11 items-center px-4 text-[13px] font-semibold text-[#163d3a] transition-colors duration-200 hover:text-[#008276]"
               >
                 Home
-
                 <span className="absolute bottom-1.5 left-4 right-4 h-px origin-left scale-x-0 bg-[#00a79a] transition-transform duration-200 group-hover:scale-x-100" />
               </Link>
 
@@ -216,7 +244,6 @@ export default function Header() {
                 className="group relative flex h-11 items-center px-4 text-[13px] font-semibold text-[#163d3a] transition-colors duration-200 hover:text-[#008276]"
               >
                 About us
-
                 <span className="absolute bottom-1.5 left-4 right-4 h-px origin-left scale-x-0 bg-[#00a79a] transition-transform duration-200 group-hover:scale-x-100" />
               </Link>
 
@@ -227,28 +254,22 @@ export default function Header() {
               <div
                 ref={servicesRef}
                 className="relative"
-                onMouseEnter={() =>
-                  setServicesOpen(true)
-                }
-                onMouseLeave={() =>
-                  setServicesOpen(false)
-                }
+                onMouseEnter={openServices}
+                onMouseLeave={closeServicesWithDelay}
               >
-                {/* Services trigger */}
+                {/* =====================================================
+      SERVICES TRIGGER
+  ===================================================== */}
 
                 <button
                   type="button"
                   aria-expanded={servicesOpen}
                   aria-haspopup="true"
-                  onClick={() =>
-                    setServicesOpen(
-                      (previous) => !previous
-                    )
-                  }
+                  onClick={() => setServicesOpen((previous) => !previous)}
                   onKeyDown={(event) => {
                     if (event.key === "ArrowDown") {
                       event.preventDefault();
-                      setServicesOpen(true);
+                      openServices();
                     }
 
                     if (event.key === "Escape") {
@@ -259,48 +280,50 @@ export default function Header() {
                   className="group relative flex h-11 cursor-pointer items-center gap-1.5 px-4 text-[13px] font-semibold text-[#163d3a] transition-colors duration-200 hover:text-[#008276]"
                 >
                   Services
-
                   <ChevronDown
                     size={15}
                     strokeWidth={2}
                     className={`transition-transform duration-200 ${
-                      servicesOpen
-                        ? "rotate-180"
-                        : "rotate-0"
+                      servicesOpen ? "rotate-180" : "rotate-0"
                     }`}
                   />
-
                   <span
                     className={`absolute bottom-1.5 left-4 right-4 h-px origin-left bg-[#00a79a] transition-transform duration-200 ${
-                      servicesOpen
-                        ? "scale-x-100"
-                        : "scale-x-0"
+                      servicesOpen ? "scale-x-100" : "scale-x-0"
                     }`}
                   />
                 </button>
 
-                {/* -----------------------------------------
-                    MEGA MENU
-                ----------------------------------------- */}
+                {/* =====================================================
+      MEGA MENU
+      IMPORTANT:
+      The menu starts at top-full instead of having a
+      10px gap. The padding creates the visual spacing
+      without breaking the hover area.
+  ===================================================== */}
 
                 <div
-                  className={`absolute left-1/2 top-[calc(100%+10px)] w-[900px] -translate-x-1/2 transition-all duration-200 ${
+                  onMouseEnter={keepServicesOpen}
+                  onMouseLeave={closeServicesWithDelay}
+                  className={`absolute left-1/2 top-full w-[900px] -translate-x-1/2 pt-2 transition-all duration-200 ${
                     servicesOpen
                       ? "pointer-events-auto visible translate-y-0 opacity-100"
                       : "pointer-events-none invisible -translate-y-2 opacity-0"
                   }`}
                 >
-                  {/* Dropdown arrow */}
-
-                  <div className="absolute left-1/2 top-[-5px] h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-[#dcebe7] bg-white" />
-
-                  {/* Mega menu container */}
+                  {/* ===================================================
+        MEGA MENU CONTAINER
+    =================================================== */}
 
                   <div className="relative overflow-hidden rounded-2xl border border-[#dcebe7] bg-white p-5 shadow-[0_25px_70px_rgba(0,60,60,0.14)]">
+                    {/* Dropdown arrow */}
+
+                    <div className="absolute left-1/2 top-[-5px] h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-[#dcebe7] bg-white" />
+
                     <div className="grid grid-cols-[220px_1fr] gap-5">
-                      {/* =================================
-                          MEGA MENU INTRO
-                      ================================= */}
+                      {/* ===============================================
+            INTRO
+        =============================================== */}
 
                       <div className="rounded-xl bg-[#f4faf8] p-5">
                         <span className="text-[9px] font-bold tracking-[0.14em] text-[#008276]">
@@ -308,22 +331,17 @@ export default function Header() {
                         </span>
 
                         <h3 className="mt-3 text-[20px] font-bold leading-[1.15] tracking-[-0.03em] text-[#003c3c]">
-                          Technology that works for your
-                          business.
+                          Technology that works for your business.
                         </h3>
 
                         <p className="mt-3 text-[12px] leading-[1.7] text-[#607774]">
-                          Reliable IT services,
-                          infrastructure and support to
-                          help your organisation operate
-                          with confidence.
+                          Reliable IT services, infrastructure and support to
+                          help your organisation operate with confidence.
                         </p>
 
                         <Link
                           href="/services"
-                          onClick={() =>
-                            setServicesOpen(false)
-                          }
+                          onClick={() => setServicesOpen(false)}
                           className="mt-5 inline-flex items-center gap-2 text-[11px] font-bold text-[#008276] transition-colors hover:text-[#003c3c]"
                         >
                           Explore all services
@@ -331,55 +349,39 @@ export default function Header() {
                         </Link>
                       </div>
 
-                      {/* =================================
-                          SERVICES GRID
-                      ================================= */}
+                      {/* ===============================================
+            SERVICES GRID
+        =============================================== */}
 
                       <div className="grid grid-cols-2 gap-2">
-                        {services.map(
-                          (service, index) => {
-                            const Icon =
-                              serviceIcons[
-                                index %
-                                  serviceIcons.length
-                              ];
+                        {services.map((service, index) => {
+                          const Icon =
+                            serviceIcons[index % serviceIcons.length];
 
-                            return (
-                              <Link
-                                key={service.slug}
-                                href={`/services/${service.slug}`}
-                                onClick={() =>
-                                  setServicesOpen(false)
-                                }
-                                className="group flex min-h-[72px] items-center gap-3 rounded-xl border border-transparent px-3 transition-all duration-200 hover:border-[#dcebe7] hover:bg-[#f4faf8]"
-                              >
-                                {/* Icon */}
+                          return (
+                            <Link
+                              key={service.slug}
+                              href={`/services/${service.slug}`}
+                              onClick={() => setServicesOpen(false)}
+                              className="group flex min-h-[72px] items-center gap-3 rounded-xl border border-transparent px-3 transition-all duration-200 hover:border-[#dcebe7] hover:bg-[#f4faf8]"
+                            >
+                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f5f2] text-[#008276] transition-colors duration-200 group-hover:bg-[#003c3c] group-hover:text-white">
+                                <Icon size={18} strokeWidth={1.8} />
+                              </span>
 
-                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f5f2] text-[#008276] transition-colors duration-200 group-hover:bg-[#003c3c] group-hover:text-white">
-                                  <Icon
-                                    size={18}
-                                    strokeWidth={1.8}
-                                  />
+                              <span className="min-w-0 flex-1">
+                                <span className="block text-[12px] font-bold leading-[1.35] text-[#163d3a]">
+                                  {service.title}
                                 </span>
+                              </span>
 
-                                {/* Title */}
-
-                                <span className="min-w-0 flex-1">
-                                  <span className="block text-[12px] font-bold leading-[1.35] text-[#163d3a]">
-                                    {service.title}
-                                  </span>
-                                </span>
-
-                                {/* Arrow */}
-
-                                <ArrowUpRight
-                                  size={14}
-                                  className="shrink-0 text-[#8aa19d] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[#008276] group-hover:opacity-100"
-                                />
-                              </Link>
-                            );
-                          }
-                        )}
+                              <ArrowUpRight
+                                size={14}
+                                className="shrink-0 text-[#8aa19d] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[#008276] group-hover:opacity-100"
+                              />
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -395,7 +397,6 @@ export default function Header() {
                 className="group relative flex h-11 items-center px-4 text-[13px] font-semibold text-[#163d3a] transition-colors duration-200 hover:text-[#008276]"
               >
                 Industries
-
                 <span className="absolute bottom-1.5 left-4 right-4 h-px origin-left scale-x-0 bg-[#00a79a] transition-transform duration-200 group-hover:scale-x-100" />
               </Link>
 
@@ -408,7 +409,6 @@ export default function Header() {
                 className="group relative flex h-11 items-center px-4 text-[13px] font-semibold text-[#163d3a] transition-colors duration-200 hover:text-[#008276]"
               >
                 FAQs
-
                 <span className="absolute bottom-1.5 left-4 right-4 h-px origin-left scale-x-0 bg-[#00a79a] transition-transform duration-200 group-hover:scale-x-100" />
               </Link>
             </nav>
@@ -432,26 +432,16 @@ export default function Header() {
 
               <button
                 type="button"
-                aria-label={
-                  mobileOpen
-                    ? "Close navigation"
-                    : "Open navigation"
-                }
+                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
                 aria-expanded={mobileOpen}
                 aria-controls="mobile-navigation"
                 onClick={toggleMobile}
                 className="relative z-[110] flex h-11 w-11 items-center justify-center rounded-xl border border-[#dcebe7] bg-white text-[#003c3c] transition-all duration-200 hover:border-[#00a79a] hover:bg-[#f4faf8] hover:text-[#008276] lg:hidden"
               >
                 {mobileOpen ? (
-                  <X
-                    size={23}
-                    strokeWidth={1.8}
-                  />
+                  <X size={23} strokeWidth={1.8} />
                 ) : (
-                  <Menu
-                    size={23}
-                    strokeWidth={1.8}
-                  />
+                  <Menu size={23} strokeWidth={1.8} />
                 )}
               </button>
             </div>
@@ -488,10 +478,7 @@ export default function Header() {
               >
                 <span>Home</span>
 
-                <ArrowUpRight
-                  size={17}
-                  className="text-[#607774]"
-                />
+                <ArrowUpRight size={17} className="text-[#607774]" />
               </Link>
 
               {/* -----------------------------------------
@@ -505,10 +492,7 @@ export default function Header() {
               >
                 <span>About us</span>
 
-                <ArrowUpRight
-                  size={17}
-                  className="text-[#607774]"
-                />
+                <ArrowUpRight size={17} className="text-[#607774]" />
               </Link>
 
               {/* =========================================
@@ -519,11 +503,7 @@ export default function Header() {
                 <button
                   type="button"
                   aria-expanded={servicesOpen}
-                  onClick={() =>
-                    setServicesOpen(
-                      (previous) => !previous
-                    )
-                  }
+                  onClick={() => setServicesOpen((previous) => !previous)}
                   className="flex min-h-[55px] w-full items-center justify-between px-1 text-left text-[14px] font-semibold text-[#003c3c]"
                 >
                   <span>Services</span>
@@ -531,9 +511,7 @@ export default function Header() {
                   <ChevronDown
                     size={18}
                     className={`text-[#008276] transition-transform duration-200 ${
-                      servicesOpen
-                        ? "rotate-180"
-                        : "rotate-0"
+                      servicesOpen ? "rotate-180" : "rotate-0"
                     }`}
                   />
                 </button>
@@ -556,9 +534,7 @@ export default function Header() {
                         onClick={closeMobile}
                         className="mb-1 flex min-h-[43px] items-center justify-between rounded-lg bg-[#f4faf8] px-3 text-[13px] font-bold text-[#008276]"
                       >
-                        <span>
-                          View all services
-                        </span>
+                        <span>View all services</span>
 
                         <ArrowUpRight size={15} />
                       </Link>
@@ -595,10 +571,7 @@ export default function Header() {
               >
                 <span>Industries</span>
 
-                <ArrowUpRight
-                  size={17}
-                  className="text-[#607774]"
-                />
+                <ArrowUpRight size={17} className="text-[#607774]" />
               </Link>
 
               {/* -----------------------------------------
@@ -612,10 +585,7 @@ export default function Header() {
               >
                 <span>FAQs</span>
 
-                <ArrowUpRight
-                  size={17}
-                  className="text-[#607774]"
-                />
+                <ArrowUpRight size={17} className="text-[#607774]" />
               </Link>
             </nav>
 
@@ -629,7 +599,6 @@ export default function Header() {
               className="mt-5 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-[#003c3c] px-5 text-[13px] font-bold text-white shadow-[0_8px_24px_rgba(0,60,60,0.12)] transition-all duration-200 hover:bg-[#008276]"
             >
               Talk to our team
-
               <ArrowUpRight size={17} />
             </Link>
 
@@ -651,10 +620,7 @@ export default function Header() {
           fixed header.
       ===================================================== */}
 
-      <div
-        className="h-[100px] sm:h-[102px] lg:h-[110px]"
-        aria-hidden="true"
-      />
+      <div className="h-[100px] sm:h-[102px] lg:h-[110px]" aria-hidden="true" />
     </>
   );
 }
