@@ -50,7 +50,7 @@ export default function Header() {
 
   const servicesRef = useRef<HTMLDivElement>(null);
 
-  const servicesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
 
   /* -------------------------------------------------------
      CLOSE DESKTOP SERVICES DROPDOWN WHEN CLICKING OUTSIDE
@@ -128,39 +128,7 @@ export default function Header() {
     setServicesOpen(false);
   };
 
-  const openServices = () => {
-    if (servicesCloseTimer.current) {
-      clearTimeout(servicesCloseTimer.current);
-    }
-
-    setServicesOpen(true);
-  };
-
-  const closeServicesWithDelay = () => {
-    if (servicesCloseTimer.current) {
-      clearTimeout(servicesCloseTimer.current);
-    }
-
-    servicesCloseTimer.current = setTimeout(() => {
-      setServicesOpen(false);
-    }, 150);
-  };
-
-  const keepServicesOpen = () => {
-    if (servicesCloseTimer.current) {
-      clearTimeout(servicesCloseTimer.current);
-    }
-
-    setServicesOpen(true);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (servicesCloseTimer.current) {
-        clearTimeout(servicesCloseTimer.current);
-      }
-    };
-  }, []);
+ 
 
   /* =======================================================
      RETURN
@@ -251,142 +219,139 @@ export default function Header() {
                   SERVICES MEGA MENU
               ========================================= */}
 
-              <div
-                ref={servicesRef}
-                className="relative"
-                onMouseEnter={openServices}
-                onMouseLeave={closeServicesWithDelay}
+              {/* =====================================================
+    SERVICES
+===================================================== */}
+
+<div
+  ref={servicesRef}
+  className="relative"
+>
+  {/* Services button */}
+
+  <button
+    type="button"
+    aria-expanded={servicesOpen}
+    aria-haspopup="true"
+    onClick={() =>
+      setServicesOpen((previous) => !previous)
+    }
+    className={`group relative flex h-11 cursor-pointer items-center gap-1.5 px-4 text-[13px] font-semibold transition-colors duration-200 ${
+      servicesOpen
+        ? "text-[#008276]"
+        : "text-[#163d3a] hover:text-[#008276]"
+    }`}
+  >
+    <span>Services</span>
+
+    <ChevronDown
+      size={15}
+      strokeWidth={2}
+      className={`transition-transform duration-200 ${
+        servicesOpen
+          ? "rotate-180"
+          : "rotate-0"
+      }`}
+    />
+
+    {/* Active underline */}
+
+    <span
+      className={`absolute bottom-1.5 left-4 right-4 h-px bg-[#00a79a] transition-transform duration-200 ${
+        servicesOpen
+          ? "scale-x-100"
+          : "scale-x-0"
+      }`}
+    />
+  </button>
+
+  {/* ===================================================
+      CLICK-OPEN MEGA MENU
+  =================================================== */}
+
+  <div
+    className={`absolute left-1/2 top-full z-[120] w-[900px] -translate-x-1/2 pt-2 transition-all duration-200 ${
+      servicesOpen
+        ? "pointer-events-auto visible translate-y-0 opacity-100"
+        : "pointer-events-none invisible -translate-y-2 opacity-0"
+    }`}
+  >
+    <div className="relative overflow-hidden rounded-2xl border border-[#dcebe7] bg-white p-5 shadow-[0_25px_70px_rgba(0,60,60,0.14)]">
+
+      {/* Arrow */}
+
+      <div className="absolute left-1/2 top-[-5px] h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-[#dcebe7] bg-white" />
+
+      <div className="grid grid-cols-[220px_1fr] gap-5">
+
+        {/* LEFT INTRO */}
+
+        <div className="rounded-xl bg-[#f4faf8] p-5">
+          <span className="text-[9px] font-bold tracking-[0.14em] text-[#008276]">
+            WHAT WE DO
+          </span>
+
+          <h3 className="mt-3 text-[20px] font-bold leading-[1.15] tracking-[-0.03em] text-[#003c3c]">
+            Technology that works for your business.
+          </h3>
+
+          <p className="mt-3 text-[12px] leading-[1.7] text-[#607774]">
+            Reliable IT services, infrastructure and
+            support to help your organisation operate
+            with confidence.
+          </p>
+
+          <Link
+            href="/services"
+            onClick={() => setServicesOpen(false)}
+            className="mt-5 inline-flex items-center gap-2 text-[11px] font-bold text-[#008276] transition-colors hover:text-[#003c3c]"
+          >
+            Explore all services
+            <ArrowUpRight size={14} />
+          </Link>
+        </div>
+
+        {/* RIGHT SERVICES */}
+
+        <div className="grid grid-cols-2 gap-2">
+          {services.map((service, index) => {
+            const Icon =
+              serviceIcons[
+                index % serviceIcons.length
+              ];
+
+            return (
+              <Link
+                key={service.slug}
+                href={`/services/${service.slug}`}
+                onClick={() => setServicesOpen(false)}
+                className="group flex min-h-[72px] items-center gap-3 rounded-xl border border-transparent px-3 transition-all duration-200 hover:border-[#dcebe7] hover:bg-[#f4faf8]"
               >
-                {/* =====================================================
-      SERVICES TRIGGER
-  ===================================================== */}
-
-                <button
-                  type="button"
-                  aria-expanded={servicesOpen}
-                  aria-haspopup="true"
-                  onClick={() => setServicesOpen((previous) => !previous)}
-                  onKeyDown={(event) => {
-                    if (event.key === "ArrowDown") {
-                      event.preventDefault();
-                      openServices();
-                    }
-
-                    if (event.key === "Escape") {
-                      event.preventDefault();
-                      setServicesOpen(false);
-                    }
-                  }}
-                  className="group relative flex h-11 cursor-pointer items-center gap-1.5 px-4 text-[13px] font-semibold text-[#163d3a] transition-colors duration-200 hover:text-[#008276]"
-                >
-                  Services
-                  <ChevronDown
-                    size={15}
-                    strokeWidth={2}
-                    className={`transition-transform duration-200 ${
-                      servicesOpen ? "rotate-180" : "rotate-0"
-                    }`}
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f5f2] text-[#008276] transition-colors duration-200 group-hover:bg-[#003c3c] group-hover:text-white">
+                  <Icon
+                    size={18}
+                    strokeWidth={1.8}
                   />
-                  <span
-                    className={`absolute bottom-1.5 left-4 right-4 h-px origin-left bg-[#00a79a] transition-transform duration-200 ${
-                      servicesOpen ? "scale-x-100" : "scale-x-0"
-                    }`}
-                  />
-                </button>
+                </span>
 
-                {/* =====================================================
-      MEGA MENU
-      IMPORTANT:
-      The menu starts at top-full instead of having a
-      10px gap. The padding creates the visual spacing
-      without breaking the hover area.
-  ===================================================== */}
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12px] font-bold leading-[1.35] text-[#163d3a]">
+                    {service.title}
+                  </span>
+                </span>
 
-                <div
-                  onMouseEnter={keepServicesOpen}
-                  onMouseLeave={closeServicesWithDelay}
-                  className={`absolute left-1/2 top-full w-[900px] -translate-x-1/2 pt-2 transition-all duration-200 ${
-                    servicesOpen
-                      ? "pointer-events-auto visible translate-y-0 opacity-100"
-                      : "pointer-events-none invisible -translate-y-2 opacity-0"
-                  }`}
-                >
-                  {/* ===================================================
-        MEGA MENU CONTAINER
-    =================================================== */}
-
-                  <div className="relative overflow-hidden rounded-2xl border border-[#dcebe7] bg-white p-5 shadow-[0_25px_70px_rgba(0,60,60,0.14)]">
-                    {/* Dropdown arrow */}
-
-                    <div className="absolute left-1/2 top-[-5px] h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-[#dcebe7] bg-white" />
-
-                    <div className="grid grid-cols-[220px_1fr] gap-5">
-                      {/* ===============================================
-            INTRO
-        =============================================== */}
-
-                      <div className="rounded-xl bg-[#f4faf8] p-5">
-                        <span className="text-[9px] font-bold tracking-[0.14em] text-[#008276]">
-                          WHAT WE DO
-                        </span>
-
-                        <h3 className="mt-3 text-[20px] font-bold leading-[1.15] tracking-[-0.03em] text-[#003c3c]">
-                          Technology that works for your business.
-                        </h3>
-
-                        <p className="mt-3 text-[12px] leading-[1.7] text-[#607774]">
-                          Reliable IT services, infrastructure and support to
-                          help your organisation operate with confidence.
-                        </p>
-
-                        <Link
-                          href="/services"
-                          onClick={() => setServicesOpen(false)}
-                          className="mt-5 inline-flex items-center gap-2 text-[11px] font-bold text-[#008276] transition-colors hover:text-[#003c3c]"
-                        >
-                          Explore all services
-                          <ArrowUpRight size={14} />
-                        </Link>
-                      </div>
-
-                      {/* ===============================================
-            SERVICES GRID
-        =============================================== */}
-
-                      <div className="grid grid-cols-2 gap-2">
-                        {services.map((service, index) => {
-                          const Icon =
-                            serviceIcons[index % serviceIcons.length];
-
-                          return (
-                            <Link
-                              key={service.slug}
-                              href={`/services/${service.slug}`}
-                              onClick={() => setServicesOpen(false)}
-                              className="group flex min-h-[72px] items-center gap-3 rounded-xl border border-transparent px-3 transition-all duration-200 hover:border-[#dcebe7] hover:bg-[#f4faf8]"
-                            >
-                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f5f2] text-[#008276] transition-colors duration-200 group-hover:bg-[#003c3c] group-hover:text-white">
-                                <Icon size={18} strokeWidth={1.8} />
-                              </span>
-
-                              <span className="min-w-0 flex-1">
-                                <span className="block text-[12px] font-bold leading-[1.35] text-[#163d3a]">
-                                  {service.title}
-                                </span>
-                              </span>
-
-                              <ArrowUpRight
-                                size={14}
-                                className="shrink-0 text-[#8aa19d] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[#008276] group-hover:opacity-100"
-                              />
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <ArrowUpRight
+                  size={14}
+                  className="shrink-0 text-[#8aa19d] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[#008276] group-hover:opacity-100"
+                />
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
               {/* -----------------------------------------
                   INDUSTRIES
