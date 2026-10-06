@@ -10,6 +10,7 @@ import {
   GraduationCap,
   ShoppingBag,
   Factory,
+  CloudyIcon,
 } from "lucide-react";
 import { services, industries } from "@/lib/data";
 import ServiceCard from "@/components/service-card";
@@ -87,7 +88,7 @@ export default function Home() {
               </div>
 
               <div className="orbit-node node-b">
-                <CloudIcon size={23} />
+                <CloudyIcon size={23} />
               </div>
 
               <div className="orbit-node node-c">
