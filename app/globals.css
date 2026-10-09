@@ -920,7 +920,7 @@ button {
 
 /* ---------- 7. Sections, services, proof, split, industries ---------- */
 .section {
-  padding: 100px 0;
+  padding: 80px 0;
 }
 .section-soft {
   background: var(--surface);
@@ -968,6 +968,7 @@ button {
   background: #fff;
   transition: all 0.25s;
 }
+
 .service-card:hover {
   transform: translateY(-5px);
   border-color: #8dc8bb;
@@ -1007,6 +1008,79 @@ button {
   font-size: 14px;
   line-height: 1.55;
 }
+
+/* Featured IT Support & Maintenance card */
+.service-card-main {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #008276;
+  background: linear-gradient(145deg, #003c3c 0%, #005650 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 60, 60, 0.12);
+}
+
+.service-card-main::before {
+  position: absolute;
+  top: -55px;
+  right: -55px;
+  width: 160px;
+  height: 160px;
+  border-radius: 9999px;
+  background: rgba(0, 167, 154, 0.2);
+  content: "";
+  pointer-events: none;
+}
+
+.service-card-main .service-icon {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #70d8cd;
+}
+
+.service-card-main h3 {
+  position: relative;
+  color: #ffffff;
+}
+
+.service-card-main p {
+  position: relative;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.service-card-main .card-link {
+  position: relative;
+  color: #70d8cd;
+}
+
+.service-card-main .service-main-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(112, 216, 205, 0.35);
+  border-radius: 9999px;
+  background: rgba(0, 167, 154, 0.15);
+  padding: 6px 10px;
+  color: #a8f0e8;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.service-card-main:hover {
+  border-color: #00a79a;
+  box-shadow: 0 18px 38px rgba(0, 60, 60, 0.2);
+  transform: translateY(-4px);
+}
+
+.service-card-main:focus-visible {
+  outline: 3px solid #00a79a;
+  outline-offset: 4px;
+}
+
 .card-link {
   display: flex;
   align-items: center;

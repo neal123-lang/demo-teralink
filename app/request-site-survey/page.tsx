@@ -1,0 +1,551 @@
+
+"use client";
+
+import { useState } from "react";
+import type { FormEvent } from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  ClipboardCheck,
+  MapPin,
+  Network,
+  ShieldCheck,
+  Video,
+} from "lucide-react";
+
+const services = [
+  "IT Support & Annual Maintenance (AMC)",
+  "Network & Wi-Fi Solutions",
+  "Cybersecurity & Firewall Management",
+  "Microsoft 365 & Cloud Services",
+  "CCTV & Surveillance Solutions",
+  "Structured Cabling & Fiber Optics",
+  "IP Telephony, PABX & VoIP",
+  "Server & IT Infrastructure",
+  "Data Backup & Recovery",
+  "IT Equipment Supply & Installation",
+  "IT Consulting & Office Setup",
+  "Other / Not Sure Yet",
+];
+
+export default function RequestSiteSurveyPage() {
+  const [submitted, setSubmitted] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [formError, setFormError] = useState("");
+
+  function toggleService(service: string) {
+    setSelectedServices((current) =>
+      current.includes(service)
+        ? current.filter((item) => item !== service)
+        : [...current, service]
+    );
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setFormError("");
+
+    if (selectedServices.length === 0) {
+      setFormError("Please select at least one service requirement.");
+      return;
+    }
+
+    // Connect your API/email handler here before production.
+    setFormError(
+      "The form is ready for integration. Connect your submission API to send this request to Teralink."
+    );
+  }
+
+  const inputClass =
+    "mt-2 w-full rounded-xl border border-[#dcebe7] bg-white px-4 py-3 text-sm text-[#163d3a] outline-none transition placeholder:text-[#9aadaa] focus:border-[#008276] focus:ring-4 focus:ring-[#008276]/10";
+
+  const labelClass =
+    "text-sm font-semibold text-[#163d3a]";
+
+  return (
+    <main className="min-h-screen bg-[#f7fbfa] text-[#163d3a]">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-[#003c3c]">
+        <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#00a79a]/20 blur-3xl" />
+        <div className="absolute -bottom-28 left-10 h-64 w-64 rounded-full bg-[#008276]/20 blur-3xl" />
+
+        <div className="relative mx-auto grid container items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100">
+              <MapPin size={15} />
+              On-site IT assessment
+            </div>
+
+            <h1 className="max-w-2xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Request a
+              <span className="text-[#70d8cd]"> Site Survey</span>
+            </h1>
+
+            <p className="mt-6 max-w-xl text-base leading-8 text-teal-50/80 sm:text-lg">
+              Planning a new office, upgrading your network or improving
+              business security? Tell us what you need, and our team can
+              review your requirements and discuss the next steps.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/90">
+              <span className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2">
+                <ClipboardCheck size={16} className="text-[#70d8cd]" />
+                Requirement assessment
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2">
+                <Network size={16} className="text-[#70d8cd]" />
+                Infrastructure planning
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              {
+                icon: Network,
+                title: "Network & Wi-Fi",
+                text: "Connectivity and coverage planning",
+              },
+              {
+                icon: ShieldCheck,
+                title: "IT Security",
+                text: "Firewall and access requirements",
+              },
+              {
+                icon: Video,
+                title: "CCTV Systems",
+                text: "Camera placement and recording needs",
+              },
+              {
+                icon: CalendarDays,
+                title: "Office Setup",
+                text: "Cabling and infrastructure assessment",
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-white/10 bg-white/[0.07] p-4 backdrop-blur-sm sm:p-6"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#00a79a]/20 text-[#70d8cd]">
+                    <Icon size={21} strokeWidth={1.7} />
+                  </span>
+                  <h2 className="mt-5 text-base font-bold text-white">
+                    {item.title}
+                  </h2>
+                  <p className="mt-2 text-xs leading-6 text-teal-50/65 sm:text-sm">
+                    {item.text}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Form and sidebar */}
+      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10">
+        <div className="rounded-2xl border border-[#dcebe7] bg-white p-5 shadow-[0_12px_45px_rgba(0,60,60,0.05)] sm:p-8 lg:p-10">
+          <div className="mb-8 border-b border-[#e7f0ee] pb-6">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#008276]">
+              Survey enquiry form
+            </p>
+            <h2 className="mt-3 text-2xl font-bold tracking-tight text-[#003c3c] sm:text-3xl">
+              Tell us about your site
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[#607774]">
+              Share a few details so we can understand your requirements.
+              Fields marked with * are required.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <fieldset>
+              <legend className="text-lg font-bold text-[#003c3c]">
+                01. Contact details
+              </legend>
+
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                <label className={labelClass}>
+                  Full name *
+                  <input
+                    name="name"
+                    required
+                    autoComplete="name"
+                    className={inputClass}
+                    placeholder="Your full name"
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  Company name *
+                  <input
+                    name="company"
+                    required
+                    autoComplete="organization"
+                    className={inputClass}
+                    placeholder="Business or organisation"
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  Work email *
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    className={inputClass}
+                    placeholder="you@company.com"
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  Contact number *
+                  <input
+                    name="phone"
+                    type="tel"
+                    required
+                    autoComplete="tel"
+                    className={inputClass}
+                    placeholder="Your phone number"
+                  />
+                </label>
+
+                <label className={`${labelClass} sm:col-span-2`}>
+                  Your role
+                  <select name="role" className={inputClass} defaultValue="">
+                    <option value="">Select your role</option>
+                    <option>Business owner / Director</option>
+                    <option>IT Manager / Administrator</option>
+                    <option>Operations / Facilities Manager</option>
+                    <option>Procurement</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+
+            <div className="border-t border-[#e7f0ee]" />
+
+            <fieldset>
+              <legend className="text-lg font-bold text-[#003c3c]">
+                02. Site information
+              </legend>
+
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                <label className={labelClass}>
+                  Site / building name
+                  <input
+                    name="siteName"
+                    className={inputClass}
+                    placeholder="Office or building name"
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  Site city *
+                  <input
+                    name="city"
+                    required
+                    className={inputClass}
+                    placeholder="City"
+                  />
+                </label>
+
+                <label className={`${labelClass} sm:col-span-2`}>
+                  Site address *
+                  <textarea
+                    name="address"
+                    required
+                    rows={3}
+                    className={`${inputClass} resize-y`}
+                    placeholder="Street address, area, city and postcode"
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  Type of premises
+                  <select
+                    name="premises"
+                    defaultValue=""
+                    className={inputClass}
+                  >
+                    <option value="">Select premises type</option>
+                    <option>Corporate office</option>
+                    <option>Retail / Commercial</option>
+                    <option>Healthcare / Clinic</option>
+                    <option>Educational institution</option>
+                    <option>Warehouse / Industrial</option>
+                    <option>Multiple locations</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+
+                <label className={labelClass}>
+                  Approximate site size
+                  <select
+                    name="siteSize"
+                    defaultValue=""
+                    className={inputClass}
+                  >
+                    <option value="">Select site size</option>
+                    <option>Under 2,000 sq. ft.</option>
+                    <option>2,000–5,000 sq. ft.</option>
+                    <option>5,000–10,000 sq. ft.</option>
+                    <option>10,000+ sq. ft.</option>
+                    <option>Multiple floors / sites</option>
+                    <option>Not sure</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+
+            <div className="border-t border-[#e7f0ee]" />
+
+            <fieldset>
+              <legend className="text-lg font-bold text-[#003c3c]">
+                03. Services required *
+              </legend>
+              <p className="mt-2 text-sm leading-6 text-[#607774]">
+                Select all areas you would like us to assess.
+              </p>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {services.map((service) => {
+                  const checked = selectedServices.includes(service);
+
+                  return (
+                    <label
+                      key={service}
+                      className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm leading-6 transition ${
+                        checked
+                          ? "border-[#008276] bg-[#f0faf7]"
+                          : "border-[#dcebe7] bg-white hover:border-[#9bcac2]"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleService(service)}
+                        className="mt-1 h-4 w-4 shrink-0 accent-[#008276]"
+                      />
+                      <span className="font-medium text-[#163d3a]">
+                        {service}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div className="border-t border-[#e7f0ee]" />
+
+            <fieldset>
+              <legend className="text-lg font-bold text-[#003c3c]">
+                04. Survey preferences
+              </legend>
+
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                <label className={labelClass}>
+                  Preferred survey date
+                  <input
+                    name="surveyDate"
+                    type="date"
+                    min={new Date().toISOString().split("T")[0]}
+                    className={inputClass}
+                  />
+                </label>
+
+                <label className={labelClass}>
+                  Preferred time
+                  <select
+                    name="surveyTime"
+                    defaultValue=""
+                    className={inputClass}
+                  >
+                    <option value="">No preference</option>
+                    <option>Morning</option>
+                    <option>Afternoon</option>
+                    <option>Flexible</option>
+                  </select>
+                </label>
+
+                <label className={labelClass}>
+                  Project stage
+                  <select
+                    name="projectStage"
+                    defaultValue=""
+                    className={inputClass}
+                  >
+                    <option value="">Select project stage</option>
+                    <option>Planning a new office</option>
+                    <option>Upgrading existing infrastructure</option>
+                    <option>Resolving an existing issue</option>
+                    <option>Expanding to another location</option>
+                    <option>Requesting a general assessment</option>
+                  </select>
+                </label>
+
+                <label className={labelClass}>
+                  Expected timeline
+                  <select
+                    name="timeline"
+                    defaultValue=""
+                    className={inputClass}
+                  >
+                    <option value="">Select timeline</option>
+                    <option>As soon as possible</option>
+                    <option>Within 2–4 weeks</option>
+                    <option>Within 1–3 months</option>
+                    <option>More than 3 months</option>
+                    <option>Still planning</option>
+                  </select>
+                </label>
+
+                <label className={`${labelClass} sm:col-span-2`}>
+                  Describe your requirements
+                  <textarea
+                    name="requirements"
+                    rows={5}
+                    className={`${inputClass} resize-y`}
+                    placeholder="Tell us about the current setup, issues, number of users, equipment or project goals."
+                  />
+                </label>
+              </div>
+            </fieldset>
+
+            <label className="flex items-start gap-3 text-sm leading-6 text-[#607774]">
+              <input
+                name="privacyConsent"
+                type="checkbox"
+                required
+                className="mt-1 h-4 w-4 shrink-0 accent-[#008276]"
+              />
+              <span>
+                I agree that Teralink Technical Solutions may use the
+                information provided to respond to my enquiry, in accordance
+                with its{" "}
+                <Link
+                  href="/privacy-policy"
+                  className="font-semibold text-[#008276] underline underline-offset-4"
+                >
+                  Privacy Policy
+                </Link>
+                . *
+              </span>
+            </label>
+
+            {formError && (
+              <p
+                role="status"
+                className={`rounded-xl border p-4 text-sm leading-6 ${
+                  submitted
+                    ? "border-[#b9dfd7] bg-[#f0faf7] text-[#005c52]"
+                    : "border-amber-200 bg-amber-50 text-amber-800"
+                }`}
+              >
+                {formError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#003c3c] px-6 py-4 text-sm font-bold text-white shadow-[0_8px_24px_rgba(0,60,60,0.12)] transition hover:-translate-y-0.5 hover:bg-[#008276] focus:outline-none focus:ring-4 focus:ring-[#008276]/20 sm:w-auto sm:min-w-64"
+            >
+              Request Site Survey
+              <ArrowRight size={17} />
+            </button>
+
+            <p className="text-xs leading-6 text-[#82938f]">
+              Submitting a request does not confirm an appointment. Our team
+              will need to review the enquiry and confirm the next steps.
+            </p>
+          </form>
+        </div>
+
+        {/* Sidebar */}
+        <aside className="space-y-5 lg:sticky lg:top-8 lg:self-start">
+          <div className="rounded-2xl bg-[#003c3c] p-6 text-white sm:p-7">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-[#70d8cd]">
+              <ClipboardCheck size={23} />
+            </span>
+
+            <h2 className="mt-5 text-xl font-bold">
+              What happens next?
+            </h2>
+
+            <div className="mt-6 space-y-5">
+              {[
+                {
+                  number: "01",
+                  title: "Share your requirements",
+                  text: "Tell us about your site and technology needs.",
+                },
+                {
+                  number: "02",
+                  title: "Initial review",
+                  text: "We review your information and clarify the scope.",
+                },
+                {
+                  number: "03",
+                  title: "Coordinate the survey",
+                  text: "Subject to availability, we discuss a suitable date and arrangements.",
+                },
+                {
+                  number: "04",
+                  title: "Discuss next steps",
+                  text: "We can discuss findings, recommendations and a quotation where appropriate.",
+                },
+              ].map((step) => (
+                <div key={step.number} className="flex gap-4">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-xs font-bold text-[#70d8cd]">
+                    {step.number}
+                  </span>
+                  <div>
+                    <h3 className="text-sm font-bold">{step.title}</h3>
+                    <p className="mt-1 text-xs leading-6 text-teal-50/65">
+                      {step.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-[#dcebe7] bg-white p-6">
+            <h2 className="text-lg font-bold text-[#003c3c]">
+              Need a quotation instead?
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[#607774]">
+              If you already know what you need, send your project
+              requirements directly to our quotation team.
+            </p>
+            <Link
+              href="/request-quotation"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#008276] transition hover:text-[#003c3c]"
+            >
+              Request a quotation
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="rounded-2xl border border-[#dcebe7] bg-white p-6">
+            <CheckCircle2 size={22} className="text-[#008276]" />
+            <h2 className="mt-3 text-base font-bold text-[#003c3c]">
+              Clear project requirements
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-[#607774]">
+              Providing accurate site information helps us understand your
+              needs before discussing the appropriate solution.
+            </p>
+          </div>
+        </aside>
+      </section>
+    </main>
+  );
+}

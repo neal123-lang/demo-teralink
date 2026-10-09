@@ -16,6 +16,7 @@ import { services, industries } from "@/lib/data";
 import ServiceCard from "@/components/service-card";
 import SectionHeading from "@/components/section-heading";
 import CtaBand from "@/components/cta-band";
+import TechnologyBrands from "@/components/TechnologyBrands";
 const benefits = [
   {
     title: "Support that stays close",
@@ -119,6 +120,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <TechnologyBrands />
       <div className="proof-strip">
         <div className="container proof-grid">
           <div className="proof-item">
